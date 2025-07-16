@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import BgVideo from "../../assets/video/backgroundvideo.mp4"
+import BgVideo from "../../assets/video/backgroundvideo.mp4";
 import {
   motion,
   useScroll,
@@ -18,46 +18,71 @@ export const HeroParallax = ({ products }: { products: Product[] }) => {
   const firstRow = products.slice(0, 5);
   const secondRow = products.slice(5, 10);
   const thirdRow = products.slice(10, 15);
+
   const ref = useRef(null);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
 
-  const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
+  const springConfig = { stiffness: 150, damping: 35, bounce: 20 };
 
-  const translateX = useSpring(useTransform(scrollYProgress, [0, 1], [0, 1000]), springConfig);
-  const translateXReverse = useSpring(useTransform(scrollYProgress, [0, 1], [0, -1000]), springConfig);
-  const rotateX = useSpring(useTransform(scrollYProgress, [0, 0.2], [15, 0]), springConfig);
-  const opacity = useSpring(useTransform(scrollYProgress, [0, 0.2], [0.2, 1]), springConfig);
-  const rotateZ = useSpring(useTransform(scrollYProgress, [0, 0.2], [20, 0]), springConfig);
-  const translateY = useSpring(useTransform(scrollYProgress, [0, 0.2], [-700, 500]), springConfig);
+  const translateX = useSpring(
+    useTransform(scrollYProgress, [0, 2], [0, 1000]),
+    springConfig
+  );
+  const translateXReverse = useSpring(
+    useTransform(scrollYProgress, [0, 2], [0, -1000]),
+    springConfig
+  );
+  const rotateX = useSpring(
+    useTransform(scrollYProgress, [0, 0.4], [15, 0]),
+    springConfig
+  );
+  const opacity = useSpring(
+    useTransform(scrollYProgress, [0, 0.4], [0.2, 1]),
+    springConfig
+  );
+  const rotateZ = useSpring(
+    useTransform(scrollYProgress, [0, 0.4], [20, 0]),
+    springConfig
+  );
+  const translateY = useSpring(
+    useTransform(scrollYProgress, [0, 0.4], [-700, 500]),
+    springConfig
+  );
 
   return (
     <div
       ref={ref}
-      className="h-[300vh] py-40 overflow-hidden antialiased relative flex flex-col [perspective:1000px] [transform-style:preserve-3d]"
+      className="h-[300vh] py-40 overflow-hidden antialiased relative flex flex-col [perspective:1000px]"
     >
-      {/* 🎥 Background Video */}
+      {/* 🎥 Background Video in flat context */}
       <video
         autoPlay
         muted
         loop
         playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
+        className="absolute inset-0 w-full h-full object-cover z-[-50] [transform-style:flat] pointer-events-none"
       >
         <source src={BgVideo} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
-      {/* Optional: dark overlay */}
-      <div className="absolute inset-0 bg-black/50 z-0" />
+      {/* Black overlay (flat context too) */}
+      <div className="absolute inset-0 bg-black/70 z-[-40] [transform-style:flat] pointer-events-none" />
 
       <Header />
 
       <motion.div
-        style={{ rotateX, rotateZ, translateY, opacity }}
-        className="relative z-10"
+        style={{
+          rotateX,
+          rotateZ,
+          translateY,
+          opacity,
+        }}
+        className="relative z-10 will-change-transform [backface-visibility:hidden]"
       >
         <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
           {firstRow.map((product) => (
@@ -101,7 +126,7 @@ export const ProductCard = ({
     <motion.div
       style={{ x: translate }}
       whileHover={{ y: -20 }}
-      className="group/product h-96 w-[30rem] relative flex-shrink-0"
+      className="group/product h-96 w-[30rem] relative flex-shrink-0 shadow-lg will-change-transform [backface-visibility:hidden] z-10"
     >
       <a href={product.link} target="_blank" rel="noopener noreferrer">
         <img

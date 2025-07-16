@@ -1,7 +1,7 @@
 'use client';
 
 import { Mail, Phone, MapPin } from 'lucide-react';
-import Logo from '../assets/images/LogoWhite.png'; // Adjust path if needed
+import Logo from '../assets/images/LogoWhite.png'; 
 
 export default function Footer() {
   return (
